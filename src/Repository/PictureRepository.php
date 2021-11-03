@@ -21,7 +21,6 @@ class PictureRepository extends ServiceEntityRepository
         parent::__construct($registry, Picture::class);
         $this->manager = $manager;
     }
-
     public function savePicture($url,$author,$title,$description){
         $picture = new Picture();
         $picture->setUrl($url)
@@ -31,7 +30,10 @@ class PictureRepository extends ServiceEntityRepository
        $this->manager->persist($picture);
        $this->manager->flush();
     }
-
+    public function removePicture(Picture $picture){
+        $this->manager->remove($picture);
+        $this->manager->flush();
+    }
     // /**
     //  * @return Picture[] Returns an array of Picture objects
     //  */

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PictureController extends AbstractController
@@ -37,18 +38,26 @@ class PictureController extends AbstractController
     /**
      * @Route("/picture", name="add_picture", methods={"POST"})
      */
-    public function addPicture(Request $request): Response
+    public function addPicture(Request $request): JsonResponse
     {
         $url = $request->request->get('url');
         $author = $request->request->get('author');
         $title = $request->request->get('title');
         $description = $request->request->get('description');
-
+         if (empty($url) || empty($author) || empty($title)){
+             throw new NotFoundHttpException('Mandatory values expected !!!');
+         }
         $this->pictureRepository->savePicture($url,$author,$title,$description);
-
-        return $this->json([
-            'message' => 'New Picture added !!!'
-        ]);
+        return new JsonResponse(['status'=>'New Picture added !!!'],Response::HTTP_CREATED);
+    }
+    /**
+     * @Route("/picture/{id}", name="delete_picture", methods={"DELETE"})
+     */
+    public function delete($id): JsonResponse
+    {
+        $picture = $this->pictureRepository->findOneBy(['id'=>$id]);
+        $this->pictureRepository->removePicture($picture);
+        return new JsonResponse(['status'=>'Picture deleted !!!'],Response::HTTP_OK);
     }
     /**
      * @Route("/picture", name="picture")
