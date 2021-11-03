@@ -18,6 +18,27 @@ class PictureController extends AbstractController
        $this->pictureRepository = $pictureRepository;
     }
      /**
+     * @Route("/pictures/list", name="pictures_list")
+     */
+    public function getList(Request $request): JsonResponse
+    {
+       $page = $request->query->get('page');
+       $limit = $request->query->get('limit');
+       
+       $pictures = $this->pictureRepository->findBy([],[],$limit,($page-1)*$limit);
+       $data = [];
+       foreach($pictures as $pic){
+           $data[] = [
+               'id'     => $pic->getId(),
+               'url'    => $pic->getUrl(),
+               'author' => $pic->getAuthor(),
+               'title'  => $pic->getTitle(),
+               'description' => $pic->getDescription()
+           ];
+       }
+       return new JsonResponse($data,Response::HTTP_OK);
+    }
+     /**
      * @Route("/pictures", name="pictures")
      */
     public function getAll(): JsonResponse
