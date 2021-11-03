@@ -30,6 +30,22 @@ class PictureRepository extends ServiceEntityRepository
        $this->manager->persist($picture);
        $this->manager->flush();
     }
+    public function updatePicture(Picture $picture,$request): Picture
+    {
+        $url = $request->request->get('url');
+        empty($url)? null : $picture->setUrl($url);
+        $author = $request->request->get('author');
+        empty($author)? null : $picture->setAuthor($author);
+        $title = $request->request->get('title');
+        empty($title)? null : $picture->setTitle($title);
+        $description = $request->request->get('description');
+        empty($description)? null : $picture->setDescription($description);
+
+        $this->manager->persist($picture);
+        $this->manager->flush();
+
+        return $picture;
+    }
     public function removePicture(Picture $picture){
         $this->manager->remove($picture);
         $this->manager->flush();

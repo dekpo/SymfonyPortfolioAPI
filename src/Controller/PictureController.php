@@ -51,6 +51,30 @@ class PictureController extends AbstractController
         return new JsonResponse(['status'=>'New Picture added !!!'],Response::HTTP_CREATED);
     }
     /**
+     * @Route("/picture/{id}", name="update_picture", methods={"PUT"})
+     */
+    public function updatePicture($id,Request $request): JsonResponse
+    {
+        $pic = $this->pictureRepository->findOneBy(['id'=>$id]);
+        $updatePicture = $this->pictureRepository->updatePicture($pic,$request);
+        return new JsonResponse($updatePicture->toArray(),Response::HTTP_OK);
+    }
+    /**
+     * @Route("/picture/{id}", name="get_one_picture", methods={"GET"})
+     */
+    public function getOnePicture($id): JsonResponse
+    {
+        $pic = $this->pictureRepository->findOneBy(['id'=>$id]);
+        $data = [
+                'id'     => $pic->getId(),
+               'url'    => $pic->getUrl(),
+               'author' => $pic->getAuthor(),
+               'title'  => $pic->getTitle(),
+               'description' => $pic->getDescription()
+        ];
+        return new JsonResponse($data,Response::HTTP_OK);
+    }
+    /**
      * @Route("/picture/{id}", name="delete_picture", methods={"DELETE"})
      */
     public function delete($id): JsonResponse

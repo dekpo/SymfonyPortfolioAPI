@@ -89,4 +89,13 @@ class Picture
 
         return $this;
     }
+    public function toArray(){
+        return [
+            'id' => $this->getId(),
+            'url' => $this->getUrl(),
+            'author' => $this->getAuthor(),
+            'title' => $this->getTitle(),
+            'description' => $this->getDescription()
+        ];
+    }
 }
