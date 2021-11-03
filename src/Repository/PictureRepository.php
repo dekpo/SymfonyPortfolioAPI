@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Picture;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,9 +15,21 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PictureRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $manager)
     {
         parent::__construct($registry, Picture::class);
+        $this->manager = $manager;
+    }
+
+    public function savePicture($url,$author,$title,$description){
+        $picture = new Picture();
+        $picture->setUrl($url)
+                ->setAuthor($author)
+                ->setTitle($title)
+                ->setDescription($description);
+       $this->manager->persist($picture);
+       $this->manager->flush();
     }
 
     // /**
