@@ -105,7 +105,8 @@ class Picture
             'url' => $this->getUrl(),
             'author' => $this->getAuthor(),
             'title' => $this->getTitle(),
-            'description' => $this->getDescription()
+            'description' => $this->getDescription(),
+            'date_updated' => $this->getDateUpdated()
         ];
     }
 
