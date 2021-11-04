@@ -18,6 +18,10 @@ class AppFixtures extends Fixture
         $picture->setAuthor( $faker->firstName().' '.$faker->lastName() );
         $picture->setTitle( $faker->sentence(4) );
         $picture->setDescription( $faker->paragraphs(4,true) );
+        $date = new \DateTime();
+        $date->format('Y-m-d H:i:s');
+        $picture->setDateCreated($date);
+        $picture->setDateUpdated($date);
         $manager->persist($picture);
         }
         $manager->flush();

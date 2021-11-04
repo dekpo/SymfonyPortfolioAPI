@@ -37,6 +37,16 @@ class Picture
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_created;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $date_updated;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,5 +107,29 @@ class Picture
             'title' => $this->getTitle(),
             'description' => $this->getDescription()
         ];
+    }
+
+    public function getDateCreated(): ?\DateTimeInterface
+    {
+        return $this->date_created;
+    }
+
+    public function setDateCreated(\DateTimeInterface $date_created): self
+    {
+        $this->date_created = $date_created;
+
+        return $this;
+    }
+
+    public function getDateUpdated(): ?\DateTimeInterface
+    {
+        return $this->date_updated;
+    }
+
+    public function setDateUpdated(\DateTimeInterface $date_updated): self
+    {
+        $this->date_updated = $date_updated;
+
+        return $this;
     }
 }

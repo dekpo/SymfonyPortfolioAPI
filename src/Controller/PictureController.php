@@ -25,7 +25,7 @@ class PictureController extends AbstractController
        $page = $request->query->get('page');
        $limit = $request->query->get('limit');
        
-       $pictures = $this->pictureRepository->findBy([],[],$limit,($page-1)*$limit);
+       $pictures = $this->pictureRepository->findBy([],['date_updated'=>'DESC'],$limit,($page-1)*$limit);
        $data = [];
        foreach($pictures as $pic){
            $data[] = [
@@ -33,7 +33,9 @@ class PictureController extends AbstractController
                'url'    => $pic->getUrl(),
                'author' => $pic->getAuthor(),
                'title'  => $pic->getTitle(),
-               'description' => $pic->getDescription()
+               'description' => $pic->getDescription(),
+               'date_created' => $pic->getDateCreated(),
+               'date_updated' => $pic->getDateUpdated()
            ];
        }
        return new JsonResponse($data,Response::HTTP_OK);
@@ -51,7 +53,9 @@ class PictureController extends AbstractController
                'url'    => $pic->getUrl(),
                'author' => $pic->getAuthor(),
                'title'  => $pic->getTitle(),
-               'description' => $pic->getDescription()
+               'description' => $pic->getDescription(),
+               'date_created' => $pic->getDateCreated(),
+               'date_updated' => $pic->getDateUpdated()
            ];
        }
        return new JsonResponse($data,Response::HTTP_OK);
@@ -65,10 +69,12 @@ class PictureController extends AbstractController
         $author = $request->request->get('author');
         $title = $request->request->get('title');
         $description = $request->request->get('description');
+        $date = new \DateTime();
+        $date->format('Y-m-d H:i:s');
          if (empty($url) || empty($author) || empty($title)){
              throw new NotFoundHttpException('Mandatory values expected !!!');
          }
-        $this->pictureRepository->savePicture($url,$author,$title,$description);
+        $this->pictureRepository->savePicture($url,$author,$title,$description,$date);
         return new JsonResponse(['status'=>'New Picture added !!!'],Response::HTTP_CREATED);
     }
     /**

@@ -21,12 +21,14 @@ class PictureRepository extends ServiceEntityRepository
         parent::__construct($registry, Picture::class);
         $this->manager = $manager;
     }
-    public function savePicture($url,$author,$title,$description){
+    public function savePicture($url,$author,$title,$description,$date){
         $picture = new Picture();
         $picture->setUrl($url)
                 ->setAuthor($author)
                 ->setTitle($title)
-                ->setDescription($description);
+                ->setDescription($description)
+                ->setDateCreated($date)
+                ->setDateUpdated($date);
        $this->manager->persist($picture);
        $this->manager->flush();
     }
@@ -40,6 +42,10 @@ class PictureRepository extends ServiceEntityRepository
         empty($title)? null : $picture->setTitle($title);
         $description = $request->request->get('description');
         empty($description)? null : $picture->setDescription($description);
+
+        $date = new \DateTime();
+        $date->format('Y-m-d H:i:s');
+        $picture->setDateUpdated($date);
 
         $this->manager->persist($picture);
         $this->manager->flush();
