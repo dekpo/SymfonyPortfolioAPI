@@ -22,8 +22,8 @@ class PictureController extends AbstractController
      */
     public function getList(Request $request): JsonResponse
     {
-       $page = $request->query->get('page');
-       $limit = $request->query->get('limit');
+       $page = $request->query->get('page')!==null ? $request->query->get('page') : 1;
+       $limit = $request->query->get('limit')!==null ? $request->query->get('limit') : 10;
        
        $pictures = $this->pictureRepository->findBy([],['date_updated'=>'DESC'],$limit,($page-1)*$limit);
        $data = [];
