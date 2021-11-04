@@ -107,6 +107,7 @@ class Picture
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
             'date_updated' => $this->getDateUpdated()
+            // modification validée
         ];
     }
 
