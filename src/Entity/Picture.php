@@ -47,6 +47,11 @@ class Picture
      */
     private $date_updated;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $likes;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,8 +111,8 @@ class Picture
             'author' => $this->getAuthor(),
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
-            'date_updated' => $this->getDateUpdated()
-            // modification validée
+            'date_updated' => $this->getDateUpdated(),
+            'likes' => $this->getLikes()
         ];
     }
 
@@ -131,6 +136,18 @@ class Picture
     public function setDateUpdated(\DateTimeInterface $date_updated): self
     {
         $this->date_updated = $date_updated;
+
+        return $this;
+    }
+
+    public function getLikes(): ?int
+    {
+        return $this->likes;
+    }
+
+    public function setLikes(?int $likes): self
+    {
+        $this->likes = $likes;
 
         return $this;
     }

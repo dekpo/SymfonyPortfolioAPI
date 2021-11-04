@@ -18,12 +18,21 @@ class PictureController extends AbstractController
        $this->pictureRepository = $pictureRepository;
     }
      /**
+     * @Route("/pictures/count", name="pictures_count")
+     */
+    public function getCount(): JsonResponse
+    {
+       $count = $this->pictureRepository->count([]);
+       $data = ['count'=>$count];
+       return new JsonResponse($data,Response::HTTP_OK);
+    }
+     /**
      * @Route("/pictures/list", name="pictures_list")
      */
     public function getList(Request $request): JsonResponse
     {
        $page = $request->query->get('page')!==null ? $request->query->get('page') : 1;
-       $limit = $request->query->get('limit')!==null ? $request->query->get('limit') : 10;
+       $limit = $request->query->get('limit')!==null ? $request->query->get('limit') : 6;
        
        $pictures = $this->pictureRepository->findBy([],['date_updated'=>'DESC'],$limit,($page-1)*$limit);
        $data = [];
@@ -31,11 +40,8 @@ class PictureController extends AbstractController
            $data[] = [
                'id'     => $pic->getId(),
                'url'    => $pic->getUrl(),
-               'author' => $pic->getAuthor(),
                'title'  => $pic->getTitle(),
-               'description' => $pic->getDescription(),
-               'date_created' => $pic->getDateCreated(),
-               'date_updated' => $pic->getDateUpdated()
+               'description' => substr($pic->getDescription(),0,130)."...",
            ];
        }
        return new JsonResponse($data,Response::HTTP_OK);
@@ -55,7 +61,8 @@ class PictureController extends AbstractController
                'title'  => $pic->getTitle(),
                'description' => $pic->getDescription(),
                'date_created' => $pic->getDateCreated(),
-               'date_updated' => $pic->getDateUpdated()
+               'date_updated' => $pic->getDateUpdated(),
+               'likes' => $pic->getLikes()
            ];
        }
        return new JsonResponse($data,Response::HTTP_OK);
@@ -87,17 +94,29 @@ class PictureController extends AbstractController
         return new JsonResponse($updatePicture->toArray(),Response::HTTP_OK);
     }
     /**
+     * @Route("/picture/{id}/like", name="like_picture", methods={"PUT"})
+     */
+    public function likePicture($id): JsonResponse
+    {
+        $pic = $this->pictureRepository->findOneBy(['id'=>$id]);
+        $updatePicture = $this->pictureRepository->likePicture($pic);
+        return new JsonResponse($updatePicture->toArray(),Response::HTTP_OK);
+    }
+    /**
      * @Route("/picture/{id}", name="get_one_picture", methods={"GET"})
      */
     public function getOnePicture($id): JsonResponse
     {
         $pic = $this->pictureRepository->findOneBy(['id'=>$id]);
         $data = [
-                'id'     => $pic->getId(),
+                'id'    => $pic->getId(),
                'url'    => $pic->getUrl(),
                'author' => $pic->getAuthor(),
                'title'  => $pic->getTitle(),
-               'description' => $pic->getDescription()
+               'description' => $pic->getDescription(),
+               'date_created' => $pic->getDateCreated(),
+               'date_updated' => $pic->getDateUpdated(),
+               'likes' => $pic->getLikes()
         ];
         return new JsonResponse($data,Response::HTTP_OK);
     }

@@ -32,6 +32,20 @@ class PictureRepository extends ServiceEntityRepository
        $this->manager->persist($picture);
        $this->manager->flush();
     }
+    public function likePicture(Picture $picture): Picture
+    {
+        $like = $picture->getLikes();
+        $newLike = $like+1;
+        $picture->setLikes($newLike);
+        $date = new \DateTime();
+        $date->format('Y-m-d H:i:s');
+        $picture->setDateUpdated($date);
+
+        $this->manager->persist($picture);
+        $this->manager->flush();
+
+        return $picture;
+    }
     public function updatePicture(Picture $picture,$request): Picture
     {
         $url = $request->request->get('url');
