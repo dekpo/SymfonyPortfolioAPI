@@ -94,7 +94,7 @@ class PictureController extends AbstractController
         return new JsonResponse($updatePicture->toArray(),Response::HTTP_OK);
     }
     /**
-     * @Route("/picture/{id}/like", name="like_picture", methods={"PUT"})
+     * @Route("/picture/{id}/like", name="like_picture", methods={"PUT","POST"})
      */
     public function likePicture($id): JsonResponse
     {
